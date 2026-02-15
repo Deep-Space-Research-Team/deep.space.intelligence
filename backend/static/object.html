@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Space Object</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div id="objectData"></div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const name = params.get("name");
+
+fetch(`/object/${name}`)
+.then(res => res.json())
+.then(data => {
+    document.getElementById("objectData").innerHTML = `
+        <h1>${data.name}</h1>
+        <p><strong>Host Star:</strong> ${data.host_star}</p>
+        <p><strong>Orbital Period:</strong> ${data.orbital_period_days}</p>
+        <p><strong>Mass (Earth):</strong> ${data.mass_earth}</p>
+        <p><strong>Radius (Earth):</strong> ${data.radius_earth}</p>
+        <p><strong>Discovery Year:</strong> ${data.discovery_year}</p>
+        <p><strong>Habitability Score:</strong> ${data.habitability_score}</p>
+    `;
+});
+</script>
+
+</body>
+</html>
