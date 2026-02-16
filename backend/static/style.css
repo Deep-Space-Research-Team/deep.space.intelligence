@@ -7,7 +7,7 @@ body {
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: auto;
 }
 
@@ -57,12 +57,17 @@ button:hover {
 .card {
     background: #1a2238;
     padding: 15px;
-    border-radius: 10px;
+    border-radius: 12px;
     transition: transform 0.2s;
 }
 
 .card:hover {
-    transform: scale(1.03);
+    transform: scale(1.05);
+}
+
+#suggestions .card {
+    border: 2px solid #00d4ff;
+    box-shadow: 0 0 15px rgba(0,212,255,0.4);
 }
 
 .badge {
