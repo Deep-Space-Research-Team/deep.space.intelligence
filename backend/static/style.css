@@ -1,53 +1,189 @@
-import os
-import requests
-from fastapi import FastAPI, Query, Response
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+/* ===============================
+   GLOBAL
+================================= */
 
-SPACE_DB_URL = os.getenv("SPACE_DB_URL")
+body {
+    margin: 0;
+    padding: 40px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: radial-gradient(circle at top left, #0b1a33, #050b18);
+    color: white;
+}
 
-app = FastAPI(title="Astra AI")
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+h1 {
+    font-size: 42px;
+    color: #00e5ff;
+    margin-bottom: 5px;
+}
 
-app.mount("/static", StaticFiles(directory="backend/static"), name="static")
+.subtitle {
+    opacity: 0.7;
+    margin-bottom: 30px;
+}
 
-def normalize_planet(p):
-    return {
-        "name": p.get("name") or "Unknown",
-        "host_star": p.get("host_star") or "Unknown",
-        "radius_earth": p.get("radius_earth"),
-        "mass_earth": p.get("mass_earth"),
-        "classification": p.get("classification") or "Unknown"
+/* ===============================
+   SEARCH
+================================= */
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+input {
+    flex: 1;
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+
+button {
+    padding: 14px 22px;
+    border-radius: 8px;
+    border: none;
+    background: #00e5ff;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: #00bcd4;
+    transform: translateY(-2px);
+}
+
+/* ===============================
+   GRID & CARDS
+================================= */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: #0f1c2e;
+    padding: 20px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: #00e5ff;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}
+
+.card h3 {
+    margin: 0 0 10px 0;
+    color: #00e5ff;
+}
+
+.card p {
+    margin: 5px 0;
+}
+
+/* ===============================
+   BADGES (Category Safe)
+================================= */
+
+.badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+/* Using safe dash class names */
+
+.badge-rocky { background:#8d6e63; color:white; }
+.badge-super-earth { background:#4caf50; color:white; }
+.badge-mini-neptune { background:#03a9f4; color:white; }
+.badge-gas-giant { background:#ff9800; color:white; }
+.badge-hot-jupiter { background:#f44336; color:white; }
+.badge-unknown { background:#607d8b; color:white; }
+
+/* ===============================
+   MODAL
+================================= */
+
+#planetModal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #0f1c2e;
+    padding: 30px;
+    border-radius: 16px;
+    width: 450px;
+    max-width: 90%;
+    position: relative;
+    animation: modalFade 0.3s ease;
+}
+
+#closeModal {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #00e5ff;
+}
+
+#closeModal:hover {
+    color: white;
+}
+
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===============================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 600px) {
+    body {
+        padding: 20px;
     }
 
-@app.get("/")
-def home():
-    return FileResponse("backend/static/index.html")
+    h1 {
+        font-size: 28px;
+    }
 
-@app.get("/suggestions")
-def suggestions():
-    r = requests.get(f"{SPACE_DB_URL}/exoplanets?limit=12")
-    planets = r.json()
-    return [normalize_planet(p) for p in planets][:8]
-
-@app.get("/search")
-def search(q: str = Query(...)):
-    r = requests.get(f"{SPACE_DB_URL}/exoplanets?limit=100")
-    planets = r.json()
-    normalized = [normalize_planet(p) for p in planets]
-    return [p for p in normalized if q.lower() in p["name"].lower()]
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-@app.head("/health")
-def health_head():
-    return Response(status_code=200)
+    .search-box {
+        flex-direction: column;
+    }
+}
