@@ -9,18 +9,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/* ===============================
+/* =====================================================
    SAFE CATEGORY CLASS
-================================= */
+===================================================== */
 
 function getBadgeClass(category) {
     if (!category) return "badge-unknown";
     return "badge-" + category.toLowerCase().replace(/\s+/g, "-");
 }
 
-/* ===============================
-   DASHBOARD (FULL SAFE)
-================================= */
+/* =====================================================
+   DASHBOARD
+===================================================== */
 
 async function loadDashboard() {
     try {
@@ -37,13 +37,13 @@ async function loadDashboard() {
         // Summary Card
         document.getElementById("summaryCard").innerHTML = `
             <h3>Planet Statistics</h3>
-            <p>Total Planets: ${summary.total_planets ?? "N/A"}</p>
-            <p>Average Radius: ${summary.average_radius ?? "N/A"} Earth</p>
-            <p>Latest Discovery: ${summary.latest_discovery_year ?? "N/A"}</p>
-            <p>Common Method: ${summary.most_common_discovery_method ?? "N/A"}</p>
+            <p><strong>Total Planets:</strong> ${summary.total_planets ?? "N/A"}</p>
+            <p><strong>Average Radius:</strong> ${summary.average_radius ?? "N/A"} Earth</p>
+            <p><strong>Latest Discovery:</strong> ${summary.latest_discovery_year ?? "N/A"}</p>
+            <p><strong>Common Method:</strong> ${summary.most_common_discovery_method ?? "N/A"}</p>
         `;
 
-        // Category Card
+        // Category Distribution
         if (summary.category_distribution &&
             typeof summary.category_distribution === "object") {
 
@@ -58,7 +58,7 @@ async function loadDashboard() {
                 "<h3>Category Distribution</h3><p>No data available.</p>";
         }
 
-        // Asteroid Card
+        // Hazardous Asteroids
         document.getElementById("asteroidCard").innerHTML = `
             <h3>Hazardous Asteroids Today</h3>
             ${hazardous.length === 0
@@ -80,9 +80,9 @@ async function loadDashboard() {
     }
 }
 
-/* ===============================
+/* =====================================================
    SUGGESTIONS
-================================= */
+===================================================== */
 
 async function loadSuggestions() {
     try {
@@ -94,9 +94,9 @@ async function loadSuggestions() {
     }
 }
 
-/* ===============================
+/* =====================================================
    SEARCH
-================================= */
+===================================================== */
 
 async function searchPlanet() {
     const input = document.getElementById("searchInput");
@@ -114,9 +114,9 @@ async function searchPlanet() {
     }
 }
 
-/* ===============================
-   RENDER PLANETS
-================================= */
+/* =====================================================
+   RENDER PLANET CARDS
+===================================================== */
 
 function renderCards(planets, containerId) {
     const container = document.getElementById(containerId);
@@ -134,22 +134,22 @@ function renderCards(planets, containerId) {
         card.className = "card";
 
         card.innerHTML = `
-            <h3>${p.name}</h3>
-            <p>Star: ${p.host_star}</p>
-            <p>Radius: ${p.radius_earth ?? "?"} Earth</p>
+            <h3>${p.name ?? "Unknown"}</h3>
+            <p><strong>Star:</strong> ${p.host_star ?? "Unknown"}</p>
+            <p><strong>Radius:</strong> ${p.radius_earth ?? "?"} Earth</p>
             <span class="badge ${badgeClass}">
                 ${p.classification ?? "Unknown"}
             </span>
         `;
 
-        card.onclick = () => openModal(p);
+        card.onclick = () => openDetailPanel(p);
         container.appendChild(card);
     });
 }
 
-/* ===============================
-   MODAL
-================================= */
+/* =====================================================
+   DETAIL PANEL (ADVANCED)
+===================================================== */
 
 function createModal() {
     const modal = document.createElement("div");
@@ -169,14 +169,46 @@ function createModal() {
     };
 }
 
-function openModal(p) {
+function openDetailPanel(p) {
+    const badgeClass = getBadgeClass(p.classification);
+
     document.getElementById("modalBody").innerHTML = `
-        <h2>${p.name}</h2>
-        <p>Host Star: ${p.host_star ?? "Unknown"}</p>
-        <p>Radius: ${p.radius_earth ?? "?"} Earth</p>
-        <p>Mass: ${p.mass_earth ?? "?"} Earth</p>
-        <p>Classification: ${p.classification ?? "Unknown"}</p>
+        <div class="detail-header">
+            <h2>${p.name ?? "Unknown"}</h2>
+            <span class="badge ${badgeClass}">
+                ${p.classification ?? "Unknown"}
+            </span>
+        </div>
+
+        <div class="detail-section">
+            <h3>Planet Metrics</h3>
+            <div class="detail-grid">
+                <div>
+                    <strong>Host Star</strong>
+                    <p>${p.host_star ?? "Unknown"}</p>
+                </div>
+                <div>
+                    <strong>Radius</strong>
+                    <p>${p.radius_earth ?? "?"} Earth</p>
+                </div>
+                <div>
+                    <strong>Mass</strong>
+                    <p>${p.mass_earth ?? "?"} Earth</p>
+                </div>
+                <div>
+                    <strong>Orbital Period</strong>
+                    <p>${p.orbital_period_days ?? "?"} Days</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h3>Discovery Information</h3>
+            <p><strong>Method:</strong> ${p.discovery_method ?? "Unknown"}</p>
+            <p><strong>Year:</strong> ${p.discovery_year ?? "Unknown"}</p>
+        </div>
     `;
+
     document.getElementById("planetModal").style.display = "flex";
 }
 
