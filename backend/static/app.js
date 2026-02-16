@@ -9,6 +9,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ===============================
+   CATEGORY CLASS SAFE CONVERTER
+================================= */
+
+function getBadgeClass(category) {
+    if (!category) return "badge-unknown";
+
+    const safe = category.toLowerCase().replace(/\s+/g, "-");
+    return `badge-${safe}`;
+}
+
+/* ===============================
    LOAD SUGGESTIONS
 ================================= */
 
@@ -56,6 +67,8 @@ function renderCards(planets, containerId) {
     }
 
     planets.forEach(p => {
+        const badgeClass = getBadgeClass(p.classification);
+
         const card = document.createElement("div");
         card.className = "card";
 
@@ -63,7 +76,9 @@ function renderCards(planets, containerId) {
             <h3>${p.name || "Unknown"}</h3>
             <p><strong>Star:</strong> ${p.host_star || "Unknown"}</p>
             <p><strong>Radius:</strong> ${p.radius_earth ?? "?"} Earth</p>
-            <span class="badge">${p.classification || "Unknown"}</span>
+            <span class="badge ${badgeClass}">
+                ${p.classification || "Unknown"}
+            </span>
         `;
 
         card.addEventListener("click", () => openModal(p));
