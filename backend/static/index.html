@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>DeepSpace Intelligence</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -9,19 +10,33 @@
 <div class="container">
 
     <h1>🚀 DeepSpace Intelligence</h1>
-<p class="subtitle">
-    Advanced NASA-Connected Space Research Platform
-</p>
+    <p class="subtitle">
+        Advanced NASA-Connected Space Research Platform
+    </p>
+    <p class="tagline">
+        Exoplanet Analytics • Asteroid Monitoring • Planetary Classification • Live Space Data
+    </p>
 
+    <!-- SEARCH -->
     <div class="search-box">
-        <input id="searchInput" placeholder="Search planet..." />
+        <input id="searchInput" placeholder="Search planet by name...">
         <button id="searchButton">Search</button>
     </div>
 
+    <!-- DASHBOARD -->
+    <h2>📊 Research Dashboard</h2>
+    <div class="dashboard-grid">
+        <div class="dashboard-card" id="summaryCard">Loading statistics...</div>
+        <div class="dashboard-card" id="categoryCard">Loading distribution...</div>
+        <div class="dashboard-card" id="asteroidCard">Loading asteroid data...</div>
+    </div>
+
+    <!-- SUGGESTIONS -->
     <h2>🌍 Suggested Worlds</h2>
     <div id="suggestions" class="grid"></div>
 
-    <h2>🔎 Results</h2>
+    <!-- RESULTS -->
+    <h2>🔎 Search Results</h2>
     <div id="results" class="grid"></div>
 
 </div>
