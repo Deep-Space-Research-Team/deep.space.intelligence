@@ -11,7 +11,7 @@ async function loadSuggestions() {
     try {
         const res = await fetch('/suggestions');
         const data = await res.json();
-        display(data, "suggestions");
+        display(data, "suggestions", true);
     } catch (err) {
         console.error("Suggestion load failed:", err);
     }
@@ -27,18 +27,18 @@ async function searchPlanet() {
     try {
         const res = await fetch(`/search?q=${encodeURIComponent(query)}`);
         const data = await res.json();
-        display(data, "results");
+        display(data, "results", false);
     } catch (err) {
         console.error("Search failed:", err);
     }
 }
 
-function display(planets, elementId) {
+function display(planets, elementId, isSuggestion) {
     const container = document.getElementById(elementId);
     container.innerHTML = "";
 
     if (!Array.isArray(planets) || planets.length === 0) {
-        container.innerHTML = "<p>No results found.</p>";
+        container.innerHTML = "<p>No data available.</p>";
         return;
     }
 
